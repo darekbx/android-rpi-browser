@@ -1,6 +1,6 @@
 package com.rpifilebrowser.di
 
-import com.rpifilebrowser.MainActivity
+import com.rpifilebrowser.ui.deviceselect.DeviceSelectActivity
 import com.rpifilebrowser.di.viewmodels.ViewModelModule
 import dagger.Component
 import javax.inject.Singleton
@@ -9,6 +9,5 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(AppModule::class, ViewModelModule::class))
 interface AppComponent {
 
-    fun inject(mainActivity: MainActivity)
-
+    fun inject(deviceSelectActivity: DeviceSelectActivity)
 }

@@ -1,13 +1,15 @@
-package com.rpifilebrowser
+package com.rpifilebrowser.ui.deviceselect
 
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.rpifilebrowser.FileBrowserApplication
+import com.rpifilebrowser.R
 import com.rpifilebrowser.utils.PermissionsHelper
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class DeviceSelectActivity : AppCompatActivity() {
 
     @Inject
     lateinit var permissionsHelper: PermissionsHelper
