@@ -3,4 +3,7 @@
     <string name="ble_not_supported">Bluetooth LE is not supported for this device.</string>
     <string name="permissions_are_required">Please grant all required permissions.</string>
     <string name="label_select_device">Select device to connect</string>
+    <string name="searching_for_devices">Searching for devices...</string>
+    <string name="waiting_for_permissions">Waiting for permissions...</string>
+    <string name="found_devices">Found %d devices</string>
 </resources>

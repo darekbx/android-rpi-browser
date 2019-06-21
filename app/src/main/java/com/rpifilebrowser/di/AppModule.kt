@@ -2,6 +2,7 @@ package com.rpifilebrowser.di
 
 import android.content.Context
 import com.rpifilebrowser.FileBrowserApplication
+import com.rpifilebrowser.bluetooth.BluetoothScanner
 import com.rpifilebrowser.utils.PermissionsHelper
 import dagger.Module
 import dagger.Provides
@@ -19,4 +20,7 @@ class AppModule(val application: FileBrowserApplication) {
 
     @Provides
     fun providePermissionsHelper() = PermissionsHelper()
+
+    @Provides
+    fun provideBluetoothScanner(context: Context) = BluetoothScanner(context)
 }

@@ -18,13 +18,13 @@
         android:elevation="8dp"
         >
         <TextView
-            android:id="@+id/found_devices_text"
+            android:id="@+id/top_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="Found devices: 5"
+            android:text="@string/waiting_for_permissions"
             android:padding="@dimen/inPadding"
             style="@style/MediumText"
             />
