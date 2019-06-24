@@ -6,4 +6,6 @@
     <string name="searching_for_devices">Searching for devices...</string>
     <string name="waiting_for_permissions">Waiting for permissions...</string>
     <string name="found_devices">Found %d devices</string>
+    <string name="dbm_format">%sdBm</string>
+    <string name="no_name">N/A</string>
 </resources>

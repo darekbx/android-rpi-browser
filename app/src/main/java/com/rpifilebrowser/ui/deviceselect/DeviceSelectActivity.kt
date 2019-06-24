@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.rpifilebrowser.FileBrowserApplication
 import com.rpifilebrowser.R
 import com.rpifilebrowser.bluetooth.BluetoothScanner
@@ -22,12 +23,16 @@ class DeviceSelectActivity : AppCompatActivity() {
     @Inject
     lateinit var bluetoothScanner: BluetoothScanner
 
+    val deviceListAdapter by lazy { DeviceListAdapter(applicationContext) }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         (application as FileBrowserApplication).appComponent.inject(this)
 
         checkBLESupport()
+        initializeList()
     }
 
     override fun onResume() {
@@ -49,6 +54,16 @@ class DeviceSelectActivity : AppCompatActivity() {
                 else -> startScan()
             }
         }
+    }
+
+    private fun initializeList() {
+        deviceListAdapter.onDeviceClick = object : (RemoteDevice) -> Unit {
+            override fun invoke(device: RemoteDevice) {
+
+            }
+        }
+        devices_list.adapter = deviceListAdapter
+        devices_list.layoutManager = LinearLayoutManager(applicationContext)
     }
 
     private fun checkBLESupport() {
@@ -77,6 +92,8 @@ class DeviceSelectActivity : AppCompatActivity() {
             override fun invoke(remoteDevices: List<RemoteDevice>) {
 
                 top_label.text = getString(R.string.found_devices, remoteDevices.size)
+
+                deviceListAdapter.swapData(remoteDevices)
 
             }
         }
