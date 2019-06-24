@@ -1,5 +1,6 @@
 package com.rpifilebrowser.ui.deviceselect
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import com.rpifilebrowser.FileBrowserApplication
 import com.rpifilebrowser.R
 import com.rpifilebrowser.bluetooth.BluetoothScanner
 import com.rpifilebrowser.model.RemoteDevice
+import com.rpifilebrowser.ui.devicebrowser.DeviceBrowserActivity
 import com.rpifilebrowser.utils.PermissionsHelper
 import com.rpifilebrowser.utils.show
 import kotlinx.android.synthetic.main.activity_main.*
@@ -59,11 +61,19 @@ class DeviceSelectActivity : AppCompatActivity() {
     private fun initializeList() {
         deviceListAdapter.onDeviceClick = object : (RemoteDevice) -> Unit {
             override fun invoke(device: RemoteDevice) {
-
+                openDevice(device.address)
             }
         }
         devices_list.adapter = deviceListAdapter
         devices_list.layoutManager = LinearLayoutManager(applicationContext)
+    }
+
+    private fun openDevice(address: String?) {
+        address?.let {
+            startActivity(Intent(this, DeviceBrowserActivity::class.java).apply {
+                putExtra(DeviceBrowserActivity.DEVICE_ADDRESS_KEY, address)
+            })
+        }
     }
 
     private fun checkBLESupport() {
