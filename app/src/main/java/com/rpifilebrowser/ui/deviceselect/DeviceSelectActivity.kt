@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rpifilebrowser.FileBrowserApplication
@@ -69,6 +68,7 @@ class DeviceSelectActivity : AppCompatActivity() {
     }
 
     private fun openDevice(address: String?) {
+        bluetoothScanner.stopScan()
         address?.let {
             startActivity(Intent(this, DeviceBrowserActivity::class.java).apply {
                 putExtra(DeviceBrowserActivity.DEVICE_ADDRESS_KEY, address)

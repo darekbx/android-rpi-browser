@@ -8,6 +8,9 @@ open class BaseBluetooth(val context: Context) {
 
     companion object {
         val ERROR_SCAN_FAILED = 1
+        val ERROR_DISCONNECTED = 2
+        val ERROR_GATT_FAILED = 3
+        val STATUS_SUCCESS = 10
     }
 
     val onStatus: ((status: Int) -> Unit)? = null
