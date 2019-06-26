@@ -2,6 +2,8 @@ package com.rpifilebrowser.bluetooth
 
 import android.bluetooth.*
 import android.content.Context
+import com.rpifilebrowser.bluetooth.utils.Chunker
+import com.rpifilebrowser.bluetooth.utils.Merger
 import java.util.*
 
 class BluetoothCommand(context: Context) : BaseBluetooth(context) {
@@ -11,16 +13,19 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
     val BT_NOTIFY_CHARACTERISTIC = "00000000-1111-2222-3333-000000000020"
 
     private var gatt: BluetoothGatt? = null
+    private var commandChunks = listOf<String>()
+    private var chunkIndex = 0
 
-    fun writeAction(action: String) {
+    var onCommandResult: ((output: String) -> Unit)? = null
+
+    fun executeCommand(command: String) {
         gatt?.let { gatt ->
+            commandChunks = Chunker.commandToChunks(command)
             val service = gatt.getService(UUID.fromString(BT_SERVICE))
             service?.getCharacteristic(UUID.fromString(BT_WRITE_CHARACTERISTIC))
                 ?.apply {
-
-                    // TODO: write big data
-                    setValue(action)
-
+                    setValue(commandChunks[chunkIndex])
+                    chunkIndex++
                 }
                 ?.run {
                     gatt.writeCharacteristic(this)
@@ -30,8 +35,7 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
     }
 
     fun connect(deviceAddress: String) {
-
-        var device = bluetoothAdapter?.getRemoteDevice(deviceAddress)
+        var device = bluetoothAdapter?.getRemoteDevice(deviceAddress.toUpperCase())
         if (device != null) {
             gatt = device.connectGatt(context, true, gattCallback)
         }
@@ -95,9 +99,11 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
 
     private fun handleIncomingValue(characteristic: BluetoothGattCharacteristic?) {
         val value = characteristic?.getStringValue(0)
-
-        // TODO: read big data
-
+        value?.let { value ->
+            Merger.obtainPacket(value, { mergedOutput ->
+                onCommandResult?.invoke(mergedOutput)
+            })
+        }
         log("GATT characteristic value: $value")
     }
 
@@ -113,9 +119,22 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
             handleServices(status, gatt)
         }
 
+        override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {
+            super.onCharacteristicWrite(gatt, characteristic, status)
+            writeNextChunk(characteristic, gatt)
+        }
+
         override fun onCharacteristicChanged(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?) {
             super.onCharacteristicChanged(gatt, characteristic)
             handleIncomingValue(characteristic)
+        }
+
+        private fun writeNextChunk(characteristic: BluetoothGattCharacteristic?, gatt: BluetoothGatt?) {
+            if (chunkIndex <= commandChunks.size - 1) {
+                characteristic?.setValue(commandChunks[chunkIndex])
+                gatt?.writeCharacteristic(characteristic)
+                chunkIndex++
+            }
         }
     }
 }
