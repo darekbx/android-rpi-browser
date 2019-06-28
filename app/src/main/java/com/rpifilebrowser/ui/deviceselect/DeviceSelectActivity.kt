@@ -100,11 +100,8 @@ class DeviceSelectActivity : AppCompatActivity() {
         bluetoothScanner.startDevicesScan()
         bluetoothScanner.onDeviceFound = object : (List<RemoteDevice>) -> Unit {
             override fun invoke(remoteDevices: List<RemoteDevice>) {
-
                 top_label.text = getString(R.string.found_devices, remoteDevices.size)
-
-                deviceListAdapter.swapData(remoteDevices)
-
+                deviceListAdapter.swapData(remoteDevices.sortedByDescending { it.rssi })
             }
         }
     }

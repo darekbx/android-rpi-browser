@@ -19,14 +19,11 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
     var onCommandResult: ((output: String) -> Unit)? = null
 
     fun executeCommand(command: String) {
-        log("Command '$command'")
         gatt?.let { gatt ->
             commandChunks = Chunker.commandToChunks(command)
-            log("Command chunks ${commandChunks.size}")
             val service = gatt.getService(UUID.fromString(BT_SERVICE))
             service?.getCharacteristic(UUID.fromString(BT_WRITE_CHARACTERISTIC))
                 ?.apply {
-                    log("Send chunk '${commandChunks[chunkIndex]}'")
                     setValue(commandChunks[chunkIndex])
                     chunkIndex++
                 }
@@ -113,33 +110,27 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
     private val gattCallback = object : BluetoothGattCallback() {
 
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
-            log("onConnectionStateChange: $newState")
             super.onConnectionStateChange(gatt, status, newState)
             handleGattConnection(newState, gatt)
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
-            log("onServicesDiscovered: $status")
             super.onServicesDiscovered(gatt, status)
             handleServices(status, gatt)
         }
 
         override fun onCharacteristicWrite(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int) {
-            log("onCharacteristicWrite: $status")
             super.onCharacteristicWrite(gatt, characteristic, status)
             writeNextChunk(characteristic, gatt)
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?) {
-            log("onCharacteristicChanged")
             super.onCharacteristicChanged(gatt, characteristic)
             handleIncomingValue(characteristic)
         }
 
         private fun writeNextChunk(characteristic: BluetoothGattCharacteristic?, gatt: BluetoothGatt?) {
-            log("$chunkIndex <= ${commandChunks.size - 1}")
             if (chunkIndex <= commandChunks.size - 1) {
-                log("Send chunk ${commandChunks[chunkIndex]}")
                 characteristic?.setValue(commandChunks[chunkIndex])
                 gatt?.writeCharacteristic(characteristic)
                 chunkIndex++
