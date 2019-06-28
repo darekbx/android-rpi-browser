@@ -13,7 +13,7 @@ open class BaseBluetooth(val context: Context) {
         val STATUS_SUCCESS = 10
     }
 
-    val onStatus: ((status: Int) -> Unit)? = null
+    var onStatus: ((status: Int) -> Unit)? = null
 
     protected fun log(message: String) {
         Log.v("BluetoothCommunication", message)
