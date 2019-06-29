@@ -21,6 +21,7 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
     fun executeCommand(command: String) {
         gatt?.let { gatt ->
             commandChunks = Chunker.commandToChunks(command)
+            chunkIndex = 0
             val service = gatt.getService(UUID.fromString(BT_SERVICE))
             service?.getCharacteristic(UUID.fromString(BT_WRITE_CHARACTERISTIC))
                 ?.apply {
