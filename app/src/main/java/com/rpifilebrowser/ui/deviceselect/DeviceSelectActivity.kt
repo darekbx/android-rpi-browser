@@ -5,12 +5,14 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rpifilebrowser.FileBrowserApplication
 import com.rpifilebrowser.R
-import com.rpifilebrowser.bluetooth.BluetoothScanner
 import com.rpifilebrowser.model.RemoteDevice
-import com.rpifilebrowser.ui.devicebrowser.DeviceBrowserActivity
+import com.rpifilebrowser.ui.devicessh.DeviceBrowserActivity
 import com.rpifilebrowser.utils.PermissionsHelper
 import com.rpifilebrowser.utils.show
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,15 +24,21 @@ class DeviceSelectActivity : AppCompatActivity() {
     lateinit var permissionsHelper: PermissionsHelper
 
     @Inject
-    lateinit var bluetoothScanner: BluetoothScanner
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    internal lateinit var devicesViewModel: DevicesViewModel
 
     val deviceListAdapter by lazy { DeviceListAdapter(applicationContext) }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         (application as FileBrowserApplication).appComponent.inject(this)
+
+        devicesViewModel = ViewModelProviders.of(this, viewModelFactory)[DevicesViewModel::class.java]
+        devicesViewModel.devices.observe(this@DeviceSelectActivity, Observer { remoteDevices ->
+            top_label.text = getString(R.string.found_devices, remoteDevices.size)
+            deviceListAdapter.swapData(remoteDevices.sortedByDescending { it.rssi })
+        })
 
         checkBLESupport()
         initializeList()
@@ -39,11 +47,6 @@ class DeviceSelectActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         handlePermissions()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        bluetoothScanner.stopScan()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -68,7 +71,7 @@ class DeviceSelectActivity : AppCompatActivity() {
     }
 
     private fun openDevice(address: String?) {
-        bluetoothScanner.stopScan()
+        devicesViewModel.stopScan()
         address?.let {
             startActivity(Intent(this, DeviceBrowserActivity::class.java).apply {
                 putExtra(DeviceBrowserActivity.DEVICE_ADDRESS_KEY, address)
@@ -96,14 +99,7 @@ class DeviceSelectActivity : AppCompatActivity() {
     private fun startScan() {
         top_label.text = getString(R.string.searching_for_devices)
         discover_progress.show()
-
-        bluetoothScanner.startDevicesScan()
-        bluetoothScanner.onDeviceFound = object : (List<RemoteDevice>) -> Unit {
-            override fun invoke(remoteDevices: List<RemoteDevice>) {
-                top_label.text = getString(R.string.found_devices, remoteDevices.size)
-                deviceListAdapter.swapData(remoteDevices.sortedByDescending { it.rssi })
-            }
-        }
+        devicesViewModel.startScan()
     }
 
     private fun PackageManager.missingSystemFeature(name: String): Boolean = !hasSystemFeature(name)

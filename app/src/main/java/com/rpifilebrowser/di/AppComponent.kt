@@ -2,7 +2,7 @@ package com.rpifilebrowser.di
 
 import com.rpifilebrowser.ui.deviceselect.DeviceSelectActivity
 import com.rpifilebrowser.di.viewmodels.ViewModelModule
-import com.rpifilebrowser.ui.devicebrowser.DeviceBrowserActivity
+import com.rpifilebrowser.ui.devicessh.DeviceBrowserActivity
 import dagger.Component
 import javax.inject.Singleton
 
