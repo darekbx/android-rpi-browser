@@ -7,11 +7,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.rpifilebrowser.FileBrowserApplication
 import com.rpifilebrowser.R
+import com.rpifilebrowser.ui.devicebrowser.tools.Browser
 import com.rpifilebrowser.ui.deviceselect.DeviceSelectActivity.Companion.DEVICE_ADDRESS_KEY
 import com.rpifilebrowser.viewmodels.DeviceCommandViewModel
 import javax.inject.Inject
 
 class DeviceBrowserActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var browser: Browser
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
