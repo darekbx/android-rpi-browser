@@ -10,31 +10,29 @@ import androidx.lifecycle.ViewModelProviders
 import com.rpifilebrowser.FileBrowserApplication
 import com.rpifilebrowser.R
 import com.rpifilebrowser.bluetooth.BaseBluetooth
-import kotlinx.android.synthetic.main.activity_browser.*
+import com.rpifilebrowser.ui.deviceselect.DeviceSelectActivity.Companion.DEVICE_ADDRESS_KEY
+import com.rpifilebrowser.viewmodels.DeviceCommandViewModel
+import kotlinx.android.synthetic.main.activity_device_ssh.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class DeviceBrowserActivity : AppCompatActivity() {
-
-    companion object {
-        val DEVICE_ADDRESS_KEY = "device_address"
-    }
+class DeviceSSHActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    internal lateinit var deviceSSHViewModel: DeviceSSHViewModel
+    internal lateinit var deviceCommandViewModel: DeviceCommandViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_browser)
+        setContentView(R.layout.activity_device_ssh)
         (application as FileBrowserApplication).appComponent.inject(this)
 
-        deviceSSHViewModel = ViewModelProviders.of(this, viewModelFactory)[DeviceSSHViewModel::class.java]
-        with(deviceSSHViewModel) {
-            status.observe(this@DeviceBrowserActivity, Observer { status -> updateButtonStatus(status) })
-            output.observe(this@DeviceBrowserActivity, Observer { output -> updateOutput(output) })
+        deviceCommandViewModel = ViewModelProviders.of(this, viewModelFactory)[DeviceCommandViewModel::class.java]
+        with(deviceCommandViewModel) {
+            status.observe(this@DeviceSSHActivity, Observer { status -> updateButtonStatus(status) })
+            output.observe(this@DeviceSSHActivity, Observer { output -> updateOutput(output) })
             connect(getDeviceAddress())
         }
     }
@@ -43,7 +41,7 @@ class DeviceBrowserActivity : AppCompatActivity() {
         var command = action_box.text.toString()
         when (TextUtils.isEmpty(command)) {
             true -> action_box.error = "Please enter command"
-            else -> deviceSSHViewModel.executeCommand(command)
+            else -> deviceCommandViewModel.executeCommand(command)
         }
     }
 

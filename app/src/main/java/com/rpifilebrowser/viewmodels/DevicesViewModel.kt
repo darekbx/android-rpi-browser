@@ -1,4 +1,4 @@
-package com.rpifilebrowser.ui.deviceselect
+package com.rpifilebrowser.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

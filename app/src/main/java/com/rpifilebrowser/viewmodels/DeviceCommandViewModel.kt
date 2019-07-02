@@ -1,4 +1,4 @@
-package com.rpifilebrowser.ui.devicessh
+package com.rpifilebrowser.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class DeviceSSHViewModel @Inject constructor(private val bluetoothCommand: BluetoothCommand): ViewModel() {
+class DeviceCommandViewModel @Inject constructor(private val bluetoothCommand: BluetoothCommand): ViewModel() {
 
     init {
         with(bluetoothCommand) {

@@ -27,7 +27,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.devicessh.DeviceBrowserActivity"
+        <activity android:name=".ui.devicessh.DeviceSSHActivity"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".ui.devicebrowser.DeviceBrowserActivity"
                   android:screenOrientation="portrait" />
 
     </application>

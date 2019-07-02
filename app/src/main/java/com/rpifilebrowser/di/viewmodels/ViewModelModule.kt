@@ -2,8 +2,8 @@ package com.rpifilebrowser.di.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.rpifilebrowser.ui.devicessh.DeviceSSHViewModel
-import com.rpifilebrowser.ui.deviceselect.DevicesViewModel
+import com.rpifilebrowser.viewmodels.DeviceCommandViewModel
+import com.rpifilebrowser.viewmodels.DevicesViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -21,7 +21,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelFactory.ViewModelKey(DeviceSSHViewModel::class)
-    internal abstract fun bindDeviceSSHViewModel(viewModel: DeviceSSHViewModel): ViewModel
+    @ViewModelFactory.ViewModelKey(DeviceCommandViewModel::class)
+    internal abstract fun bindDeviceCommandViewModel(viewModel: DeviceCommandViewModel): ViewModel
+
 
 }

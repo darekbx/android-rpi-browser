@@ -12,13 +12,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.rpifilebrowser.FileBrowserApplication
 import com.rpifilebrowser.R
 import com.rpifilebrowser.model.RemoteDevice
-import com.rpifilebrowser.ui.devicessh.DeviceBrowserActivity
+import com.rpifilebrowser.ui.devicessh.DeviceSSHActivity
 import com.rpifilebrowser.utils.PermissionsHelper
 import com.rpifilebrowser.utils.show
+import com.rpifilebrowser.viewmodels.DevicesViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class DeviceSelectActivity : AppCompatActivity() {
+
+    companion object {
+        val DEVICE_ADDRESS_KEY = "device_address"
+    }
 
     @Inject
     lateinit var permissionsHelper: PermissionsHelper
@@ -73,8 +78,8 @@ class DeviceSelectActivity : AppCompatActivity() {
     private fun openDevice(address: String?) {
         devicesViewModel.stopScan()
         address?.let {
-            startActivity(Intent(this, DeviceBrowserActivity::class.java).apply {
-                putExtra(DeviceBrowserActivity.DEVICE_ADDRESS_KEY, address)
+            startActivity(Intent(this, DeviceSSHActivity::class.java).apply {
+                putExtra(DeviceSSHActivity.DEVICE_ADDRESS_KEY, address)
             })
         }
     }
