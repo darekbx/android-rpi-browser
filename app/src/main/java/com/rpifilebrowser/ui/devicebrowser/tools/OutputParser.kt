@@ -9,6 +9,9 @@ class OutputParser {
             .map { itemFromLine(it) }
 
     private fun itemFromLine(line: String): BrowserItem {
-        return BrowserItem("", false, 0, "")
+        var isDirectory = line[0] == 'd'
+        val chunks = line.split("\\s+".toRegex())
+        var date = (5..7).map { chunks[it] }.joinToString(" ")
+        return BrowserItem(chunks.last(), isDirectory, chunks[4].toLong(), date)
     }
 }
