@@ -10,6 +10,7 @@ import com.rpifilebrowser.R
 import com.rpifilebrowser.ui.devicebrowser.tools.Browser
 import com.rpifilebrowser.ui.deviceselect.DeviceSelectActivity.Companion.DEVICE_ADDRESS_KEY
 import com.rpifilebrowser.viewmodels.DeviceCommandViewModel
+import kotlinx.android.synthetic.main.activity_device_browser.*
 import javax.inject.Inject
 
 class DeviceBrowserActivity : AppCompatActivity() {
@@ -29,9 +30,19 @@ class DeviceBrowserActivity : AppCompatActivity() {
         deviceCommandViewModel = ViewModelProviders.of(this, viewModelFactory)[DeviceCommandViewModel::class.java]
         with(deviceCommandViewModel) {
             status.observe(this@DeviceBrowserActivity, Observer { status -> })
-            output.observe(this@DeviceBrowserActivity, Observer { output -> })
+            output.observe(this@DeviceBrowserActivity, Observer { output -> browser.parseResult(output) })
             connect(getDeviceAddress())
         }
+
+        action_button.setOnClickListener {
+            browser.loadInitialDir()
+        }
+
+        action_button_2.setOnClickListener {
+            browser.open("home/pi")
+        }
+
+        browser.commandInvoker = { command -> deviceCommandViewModel.executeCommand(command) }
     }
 
     private fun getDeviceAddress() = intent.getStringExtra(DEVICE_ADDRESS_KEY)

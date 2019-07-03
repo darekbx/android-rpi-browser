@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.rpifilebrowser.FileBrowserApplication
 import com.rpifilebrowser.R
 import com.rpifilebrowser.model.RemoteDevice
+import com.rpifilebrowser.ui.devicebrowser.DeviceBrowserActivity
 import com.rpifilebrowser.ui.devicessh.DeviceSSHActivity
 import com.rpifilebrowser.utils.PermissionsHelper
 import com.rpifilebrowser.utils.show
@@ -22,6 +24,7 @@ import javax.inject.Inject
 class DeviceSelectActivity : AppCompatActivity() {
 
     companion object {
+        val BACKUP_DEVICE = "Backup Device"
         val DEVICE_ADDRESS_KEY = "device_address"
     }
 
@@ -68,18 +71,36 @@ class DeviceSelectActivity : AppCompatActivity() {
     private fun initializeList() {
         deviceListAdapter.onDeviceClick = object : (RemoteDevice) -> Unit {
             override fun invoke(device: RemoteDevice) {
-                openDevice(device.address)
+                devicesViewModel.stopScan()
+                showActionDialog(device)
+                //openDevice(device.address)
             }
         }
         devices_list.adapter = deviceListAdapter
         devices_list.layoutManager = LinearLayoutManager(applicationContext)
     }
 
-    private fun openDevice(address: String?) {
-        devicesViewModel.stopScan()
+    private fun showActionDialog(remoteDevice: RemoteDevice) {
+        AlertDialog.Builder(this)
+            .setTitle(remoteDevice.name)
+            .setMessage(R.string.select_action)
+            .setPositiveButton(R.string.terminal, { v, i-> openSSH(remoteDevice.address) })
+            .setNegativeButton(R.string.browser, {v,i-> openBrowser(remoteDevice.address) })
+            .show()
+    }
+
+    private fun openSSH(address: String?) {
+        startDeviceActivity(address, DeviceSSHActivity::class.java)
+    }
+
+    private fun openBrowser(address: String?) {
+        startDeviceActivity(address, DeviceBrowserActivity::class.java)
+    }
+
+    private fun startDeviceActivity(address: String?, activity: Class<out Any>) {
         address?.let {
-            startActivity(Intent(this, DeviceSSHActivity::class.java).apply {
-                putExtra(DeviceSSHActivity.DEVICE_ADDRESS_KEY, address)
+            startActivity(Intent(this, activity).apply {
+                putExtra(DEVICE_ADDRESS_KEY, address)
             })
         }
     }

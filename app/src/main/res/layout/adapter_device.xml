@@ -4,8 +4,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <import type="android.text.TextUtils" />
-        <variable name="device" type="com.rpifilebrowser.model.RemoteDevice" />
+        <import type="android.text.TextUtils"/>
+        <variable name="device" type="com.rpifilebrowser.model.RemoteDevice"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

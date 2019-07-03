@@ -6,8 +6,8 @@ class Browser(val outputParser: OutputParser) {
 
     private var path = mutableListOf("/")
 
-    var commandInvoker: ((command: String) -> String)? = null
-    var browserItems: ((items: List<BrowserItem) -> Unit)? = null
+    var commandInvoker: ((command: String) -> Unit)? = null
+    var browserItems: ((items: List<BrowserItem>) -> Unit)? = null
 
     fun loadInitialDir() {
         execute()
@@ -29,13 +29,16 @@ class Browser(val outputParser: OutputParser) {
         execute()
     }
 
-    private fun execute() {
-        val pathParts = path.joinToString("")
-        val command = "ls -l $pathParts"
-        val result = commandInvoker?.invoke(command)
+    fun parseResult(result: String?) {
         result?.let { result ->
             var items = outputParser.parse(result)
             browserItems?.invoke(items)
         }
+    }
+
+    private fun execute() {
+        val pathParts = path.joinToString("")
+        val command = "ls -l $pathParts"
+        commandInvoker?.invoke(command)
     }
 }
