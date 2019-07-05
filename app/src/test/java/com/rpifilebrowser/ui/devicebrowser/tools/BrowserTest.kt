@@ -1,6 +1,7 @@
 package com.rpifilebrowser.ui.devicebrowser.tools
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Test
 
@@ -77,9 +78,9 @@ class BrowserTest {
         }
 
         // Then
-        verify(callback)("ls -l /")
+        verify(callback, times(2))("ls -l /")
         verify(callback)("ls -l /home/")
         verify(callback)("ls -l /home/pi/")
-        verify(callback)("ls -l /")
+        verify(callback, times(2))("ls -l /")
     }
 }
