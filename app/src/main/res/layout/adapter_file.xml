@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/inPadding">
+        <ImageView
+                android:id="@+id/icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/ic_file"
+        />
+        <TextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/icon"
+                app:layout_constraintBottom_toBottomOf="@id/icon"
+                app:layout_constraintStart_toEndOf="@id/icon"
+                android:paddingStart="@dimen/inPadding"
+                tools:text="build.gradle"
+                android:typeface="monospace"
+        />
+        <TextView
+                android:id="@+id/size"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/icon"
+                app:layout_constraintBottom_toBottomOf="@id/icon"
+                app:layout_constraintStart_toEndOf="@id/name"
+                app:layout_constraintEnd_toStartOf="@id/date"
+                android:gravity="end"
+                android:paddingStart="@dimen/inPadding"
+                tools:text="4096"
+                android:typeface="monospace"
+        />
+        <TextView
+                android:id="@+id/date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/icon"
+                app:layout_constraintBottom_toBottomOf="@id/icon"
+                app:layout_constraintStart_toEndOf="@id/size"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="end"
+                android:paddingStart="@dimen/inPadding"
+                tools:text="cze 24 11:48"
+                android:typeface="monospace"
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

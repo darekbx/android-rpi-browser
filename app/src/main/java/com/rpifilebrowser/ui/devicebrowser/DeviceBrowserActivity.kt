@@ -11,7 +11,6 @@ import com.rpifilebrowser.bluetooth.BaseBluetooth
 import com.rpifilebrowser.ui.devicebrowser.tools.Browser
 import com.rpifilebrowser.ui.deviceselect.DeviceSelectActivity.Companion.DEVICE_ADDRESS_KEY
 import com.rpifilebrowser.viewmodels.DeviceCommandViewModel
-import kotlinx.android.synthetic.main.activity_device_browser.*
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -41,6 +40,7 @@ class DeviceBrowserActivity : AppCompatActivity() {
         }
 
         browser.commandInvoker = { command -> deviceCommandViewModel.executeCommand(command) }
+        browser.browserItems = { items -> /* TODO */}
     }
 
     private fun handleStatus(status: Int) {

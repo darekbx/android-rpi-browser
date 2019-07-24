@@ -5,8 +5,11 @@ import com.rpifilebrowser.model.BrowserItem
 class OutputParser {
 
     fun parse(output: String) = output
-            .lines()
-            .map { itemFromLine(it) }
+        .lines()
+        .filter { verifyLine(it) }
+        .map { itemFromLine(it) }
+
+    private fun verifyLine(it: String) = it != null && it.length > 0 && it.startsWith("total").not()
 
     private fun itemFromLine(line: String): BrowserItem {
         var isDirectory = line[0] == 'd'

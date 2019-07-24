@@ -7,7 +7,8 @@ import org.junit.Assert.*
 class OutputParserTest {
 
     private val sample =
-        """-rw-r--r--  1 mac  admin   891 Jun 17 21:26 RPiFileBrowser.iml
+        """total 10
+-rw-r--r--  1 mac  admin   891 Jun 17 21:26 RPiFileBrowser.iml
 drwxr-xr-x  9 mac  admin   288 Jul  2 22:04 app
 drwxr-xr-x  3 mac  admin    96 Jun 17 21:35 build
 -rw-r--r--  1 mac  admin   694 Jun 28 21:38 build.gradle
@@ -17,7 +18,8 @@ drwxr-xr-x  3 mac  admin    96 Jun 17 21:17 gradle
 -rwxr--r--  1 mac  admin  5296 Jun 17 21:17 gradlew
 -rw-r--r--  1 mac  admin  2260 Jun 17 21:17 gradlew.bat
 -rw-r--r--  1 mac  admin   428 Jun 17 21:17 local.properties
--rw-r--r--  1 mac  admin    15 Jun 17 21:17 settings.gradle"""
+-rw-r--r--  1 mac  admin    15 Jun 17 21:17 settings.gradle
+"""
 
     @Test
     fun parse() {
