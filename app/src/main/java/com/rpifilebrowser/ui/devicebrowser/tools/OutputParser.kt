@@ -8,6 +8,7 @@ class OutputParser {
         .lines()
         .filter { verifyLine(it) }
         .map { itemFromLine(it) }
+        .sortedByDescending { it.isDirectory }
 
     private fun verifyLine(it: String) = it != null && it.length > 0 && it.startsWith("total").not()
 

@@ -11,4 +11,6 @@
     <string name="terminal">Terminal</string>
     <string name="browser">Browser</string>
     <string name="select_action">Select action for this device</string>
+    <string name="device_disconnected">Device has been disconnected</string>
+    <string name="close">Close</string>
 </resources>

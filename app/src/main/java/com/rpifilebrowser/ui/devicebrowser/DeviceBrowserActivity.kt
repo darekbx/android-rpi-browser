@@ -1,6 +1,8 @@
 package com.rpifilebrowser.ui.devicebrowser
 
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +13,7 @@ import com.rpifilebrowser.bluetooth.BaseBluetooth
 import com.rpifilebrowser.ui.devicebrowser.tools.Browser
 import com.rpifilebrowser.ui.deviceselect.DeviceSelectActivity.Companion.DEVICE_ADDRESS_KEY
 import com.rpifilebrowser.viewmodels.DeviceCommandViewModel
+import kotlinx.android.synthetic.main.activity_device_browser.*
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -40,7 +43,25 @@ class DeviceBrowserActivity : AppCompatActivity() {
         }
 
         browser.commandInvoker = { command -> deviceCommandViewModel.executeCommand(command) }
-        browser.browserItems = { items -> /* TODO */}
+        browser.browserItems = { items ->
+            browserAdapter.clear()
+            browserAdapter.addAll(items)
+            hideProgress()
+        }
+
+        browser_list.adapter = browserAdapter
+
+        browserAdapter.onItemClick = { item ->
+            when (item.isDirectory) {
+                true -> {
+                    showProgress()
+                    browser.open(item.name)
+                }
+                else -> { }
+            }
+        }
+
+        showProgress()
     }
 
     private fun handleStatus(status: Int) {
@@ -48,10 +69,19 @@ class DeviceBrowserActivity : AppCompatActivity() {
             when (status) {
                 BaseBluetooth.STATUS_SUCCESS -> loadRoot()
                 BaseBluetooth.ERROR_DISCONNECTED -> {
-                    // TODO
+                    hideProgress()
+                    showDisconnectedDialog()
                 }
             }
         }
+    }
+
+    private fun showDisconnectedDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.app_name)
+            .setMessage(R.string.device_disconnected)
+            .setPositiveButton(R.string.close, { v, i -> finish() })
+            .show()
     }
 
     private fun loadRoot() {
@@ -64,4 +94,14 @@ class DeviceBrowserActivity : AppCompatActivity() {
     }
 
     private fun getDeviceAddress() = intent.getStringExtra(DEVICE_ADDRESS_KEY)
+
+    private val browserAdapter by lazy { BrowserAdapter(this) }
+
+    private fun showProgress() {
+        progress.visibility = View.VISIBLE
+    }
+
+    private fun hideProgress() {
+        progress.visibility = View.GONE
+    }
 }
