@@ -18,9 +18,13 @@ class Browser(val outputParser: OutputParser) {
         execute()
     }
 
+    fun canGoUp() = path.size > 0
+
     fun levelUp() {
-        path.removeAt(path.size - 1)
-        execute()
+        if (path.size > 0) {
+            path.removeAt(path.size - 1)
+            execute()
+        }
     }
 
     fun goToRoot() {

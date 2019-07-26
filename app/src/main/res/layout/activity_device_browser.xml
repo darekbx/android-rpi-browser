@@ -6,11 +6,51 @@
         android:layout_width="match_parent" android:layout_height="match_parent"
         tools:context=".ui.deviceselect.DeviceSelectActivity"
         android:clipToPadding="false">
+
+    <ImageView
+            android:id="@+id/up_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/inPadding"
+            android:layout_marginBottom="@dimen/outPadding"
+            android:layout_marginTop="@dimen/outPadding"
+            android:src="@drawable/ic_left"
+            android:alpha="0.5"
+            android:onClick="onGoUpClick"
+    />
+    <TextView
+            android:id="@+id/move_up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/up_icon"
+            app:layout_constraintBottom_toBottomOf="@id/up_icon"
+            app:layout_constraintStart_toEndOf="@id/up_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingStart="@dimen/inPadding"
+            android:text="."
+            android:typeface="monospace"
+            android:textColor="#666"
+            android:onClick="onGoUpClick"
+    />
+    <LinearLayout
+            android:id="@+id/delimiter"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/up_icon"
+            android:layout_marginTop="@dimen/outPadding"
+            android:background="#2000"
+    />
+
     <ListView
             android:id="@+id/browser_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/delimiter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +63,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="#5000"
+            android:background="#2000"
             android:visibility="gone">
         <ProgressBar
                 android:layout_width="48dp"

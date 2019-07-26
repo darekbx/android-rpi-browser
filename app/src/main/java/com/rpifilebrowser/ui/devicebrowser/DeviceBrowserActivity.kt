@@ -64,6 +64,13 @@ class DeviceBrowserActivity : AppCompatActivity() {
         showProgress()
     }
 
+    fun onGoUpClick(v: View) {
+        if (browser.canGoUp()) {
+            showProgress()
+            browser.levelUp()
+        }
+    }
+
     private fun handleStatus(status: Int) {
         CoroutineScope(Dispatchers.Main).launch {
             when (status) {
