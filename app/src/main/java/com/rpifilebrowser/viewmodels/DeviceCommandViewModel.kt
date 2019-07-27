@@ -19,20 +19,32 @@ class DeviceCommandViewModel @Inject constructor(private val bluetoothCommand: B
             }
             onCommandResult = {
                 CoroutineScope(Dispatchers.Main).launch {
-                    output.value = it
+                    when (isFileReadRequest) {
+                        true -> fileOutput.value = it
+                        else -> output.value = it
+                    }
                 }
             }
         }
     }
 
+    private var isFileReadRequest = false
+
     val output: MutableLiveData<String> = MutableLiveData()
     val status: MutableLiveData<Int> = MutableLiveData()
+    val fileOutput: MutableLiveData<String> = MutableLiveData()
 
     fun connect(deviceAddress: String) {
         bluetoothCommand.connect(deviceAddress)
     }
 
+    fun readFile(path: String) {
+        isFileReadRequest = true
+        bluetoothCommand.executeCommand("cat $path")
+    }
+
     fun executeCommand(command: String) {
+        isFileReadRequest = false
         bluetoothCommand.executeCommand(command)
     }
 

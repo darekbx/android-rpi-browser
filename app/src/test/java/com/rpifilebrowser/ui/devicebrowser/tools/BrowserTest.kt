@@ -3,6 +3,7 @@ package com.rpifilebrowser.ui.devicebrowser.tools
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class BrowserTest {
@@ -38,6 +39,7 @@ class BrowserTest {
         }
 
         // Then
+        assertEquals("/home/pi/", browser.getPath().joinToString(""))
         verify(callback)("ls -l /")
         verify(callback)("ls -l /home/")
         verify(callback)("ls -l /home/pi/")

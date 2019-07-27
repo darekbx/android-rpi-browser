@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.rpifilebrowser.FileBrowserApplication
 import com.rpifilebrowser.R
 import com.rpifilebrowser.bluetooth.BaseBluetooth
+import com.rpifilebrowser.model.BrowserItem
 import com.rpifilebrowser.ui.devicebrowser.tools.Browser
 import com.rpifilebrowser.ui.deviceselect.DeviceSelectActivity.Companion.DEVICE_ADDRESS_KEY
 import com.rpifilebrowser.viewmodels.DeviceCommandViewModel
@@ -39,6 +40,7 @@ class DeviceBrowserActivity : AppCompatActivity() {
         with(deviceCommandViewModel) {
             status.observe(this@DeviceBrowserActivity, Observer { status -> handleStatus(status) })
             output.observe(this@DeviceBrowserActivity, Observer { output -> browser.parseResult(output) })
+            fileOutput.observe(this@DeviceBrowserActivity, Observer { fileOutput -> handleFile(fileOutput) })
             connect(getDeviceAddress())
         }
 
@@ -52,12 +54,10 @@ class DeviceBrowserActivity : AppCompatActivity() {
         browser_list.adapter = browserAdapter
 
         browserAdapter.onItemClick = { item ->
+            showProgress()
             when (item.isDirectory) {
-                true -> {
-                    showProgress()
-                    browser.open(item.name)
-                }
-                else -> { }
+                true -> browser.open(item.name)
+                else -> openFile(item)
             }
         }
 
@@ -69,6 +69,15 @@ class DeviceBrowserActivity : AppCompatActivity() {
             showProgress()
             browser.levelUp()
         }
+    }
+
+    private fun openFile(item: BrowserItem) {
+        val path = "${browser.getPath()}${item.name}"
+        deviceCommandViewModel.readFile(path)
+    }
+
+    private fun handleFile(fileContents: String) {
+        // TODO: ask what to do with file
     }
 
     private fun handleStatus(status: Int) {

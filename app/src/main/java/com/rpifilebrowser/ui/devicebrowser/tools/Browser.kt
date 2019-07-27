@@ -9,6 +9,8 @@ class Browser(val outputParser: OutputParser) {
     var commandInvoker: ((command: String) -> Unit)? = null
     var browserItems: ((items: List<BrowserItem>) -> Unit)? = null
 
+    fun getPath() = path
+
     fun loadInitialDir() {
         execute()
     }
