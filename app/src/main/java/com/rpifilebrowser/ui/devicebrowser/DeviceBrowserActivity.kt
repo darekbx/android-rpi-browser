@@ -41,6 +41,7 @@ class DeviceBrowserActivity : AppCompatActivity() {
             status.observe(this@DeviceBrowserActivity, Observer { status -> handleStatus(status) })
             output.observe(this@DeviceBrowserActivity, Observer { output -> browser.parseResult(output) })
             fileOutput.observe(this@DeviceBrowserActivity, Observer { fileOutput -> handleFile(fileOutput) })
+            progress.observe(this@DeviceBrowserActivity, Observer { handleProgress(it.first, it.second) })
             connect(getDeviceAddress())
         }
 
@@ -74,6 +75,10 @@ class DeviceBrowserActivity : AppCompatActivity() {
     private fun openFile(item: BrowserItem) {
         val path = "${browser.getPath()}${item.name}"
         deviceCommandViewModel.readFile(path)
+    }
+
+    private fun handleProgress(progress: Int, max: Int) {
+        // TODO: show progress
     }
 
     private fun handleFile(fileContents: String) {

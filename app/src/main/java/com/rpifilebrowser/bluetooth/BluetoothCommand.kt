@@ -17,6 +17,11 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
     private var chunkIndex = 0
 
     var onCommandResult: ((output: String) -> Unit)? = null
+    var onProgress: ((progress: Int, max: Int) -> Unit)? = null
+        set(value) {
+            Merger.onProgress = value
+            field = value
+        }
 
     fun executeCommand(command: String) {
         gatt?.let { gatt ->
@@ -27,6 +32,7 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
                 ?.apply {
                     setValue(commandChunks[chunkIndex])
                     chunkIndex++
+                    onProgress?.invoke(chunkIndex, commandChunks.size)
                 }
                 ?.run {
                     gatt.writeCharacteristic(this)
@@ -135,6 +141,7 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
                 characteristic?.setValue(commandChunks[chunkIndex])
                 gatt?.writeCharacteristic(characteristic)
                 chunkIndex++
+                onProgress?.invoke(chunkIndex, commandChunks.size)
             }
         }
     }

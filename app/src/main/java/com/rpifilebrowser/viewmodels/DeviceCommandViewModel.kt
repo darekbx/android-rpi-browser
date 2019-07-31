@@ -25,6 +25,11 @@ class DeviceCommandViewModel @Inject constructor(private val bluetoothCommand: B
                     }
                 }
             }
+            onProgress = { progress, max ->
+                CoroutineScope(Dispatchers.Main).launch {
+                    this@DeviceCommandViewModel.progress.value = Pair(progress, max)
+                }
+            }
         }
     }
 
@@ -33,6 +38,7 @@ class DeviceCommandViewModel @Inject constructor(private val bluetoothCommand: B
     val output: MutableLiveData<String> = MutableLiveData()
     val status: MutableLiveData<Int> = MutableLiveData()
     val fileOutput: MutableLiveData<String> = MutableLiveData()
+    val progress: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
 
     fun connect(deviceAddress: String) {
         bluetoothCommand.connect(deviceAddress)
