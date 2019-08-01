@@ -78,7 +78,8 @@ class DeviceBrowserActivity : AppCompatActivity() {
     }
 
     private fun handleProgress(progress: Int, max: Int) {
-        // TODO: show progress
+        progress_circular.max = max
+        progress_circular.progress = progress
     }
 
     private fun handleFile(fileContents: String) {
@@ -119,10 +120,10 @@ class DeviceBrowserActivity : AppCompatActivity() {
     private val browserAdapter by lazy { BrowserAdapter(this) }
 
     private fun showProgress() {
-        progress.visibility = View.VISIBLE
+        progress_container.visibility = View.VISIBLE
     }
 
     private fun hideProgress() {
-        progress.visibility = View.GONE
+        progress_container.visibility = View.GONE
     }
 }

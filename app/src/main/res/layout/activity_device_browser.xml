@@ -56,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="parent"
     />
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/progress"
+            android:id="@+id/progress_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -66,12 +66,18 @@
             android:background="#2000"
             android:visibility="gone">
         <ProgressBar
+                android:id="@+id/progress_circular"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressDrawable="@drawable/bg_circular_progress"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0"
         />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
