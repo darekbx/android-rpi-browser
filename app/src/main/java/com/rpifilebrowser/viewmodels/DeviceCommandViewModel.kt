@@ -30,11 +30,17 @@ class DeviceCommandViewModel @Inject constructor(private val bluetoothCommand: B
                     this@DeviceCommandViewModel.progress.value = Pair(progress, max)
                 }
             }
+            onErrorResult = { message ->
+                CoroutineScope(Dispatchers.Main).launch {
+                    this@DeviceCommandViewModel.error.value = message
+                }
+            }
         }
     }
 
     private var isFileReadRequest = false
 
+    val error : MutableLiveData<String> = MutableLiveData()
     val output: MutableLiveData<String> = MutableLiveData()
     val status: MutableLiveData<Int> = MutableLiveData()
     val fileOutput: MutableLiveData<String> = MutableLiveData()

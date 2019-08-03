@@ -3,6 +3,7 @@ package com.rpifilebrowser.bluetooth
 import android.bluetooth.*
 import android.content.Context
 import com.rpifilebrowser.bluetooth.utils.Chunker
+import com.rpifilebrowser.bluetooth.utils.CompressionUtil
 import com.rpifilebrowser.bluetooth.utils.Merger
 import java.util.*
 
@@ -17,6 +18,7 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
     private var chunkIndex = 0
 
     var onCommandResult: ((output: String) -> Unit)? = null
+    var onErrorResult: ((output: String) -> Unit)? = null
     var onProgress: ((progress: Int, max: Int) -> Unit)? = null
         set(value) {
             Merger.onProgress = value
@@ -108,7 +110,13 @@ class BluetoothCommand(context: Context) : BaseBluetooth(context) {
         val value = characteristic?.getStringValue(0)
         value?.let { value ->
             Merger.obtainPacket(value, { mergedOutput ->
-                onCommandResult?.invoke(mergedOutput)
+                try {
+                    val decoded = CompressionUtil.decodeData(mergedOutput)
+                    onCommandResult?.invoke(decoded)
+                } catch (e: Exception) {
+                    onErrorResult?.invoke(mergedOutput)
+                    e.printStackTrace()
+                }
             })
         }
         log("GATT characteristic value: $value")

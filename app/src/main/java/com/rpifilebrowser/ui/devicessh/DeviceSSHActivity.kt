@@ -3,6 +3,7 @@ package com.rpifilebrowser.ui.devicessh
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -33,6 +34,9 @@ class DeviceSSHActivity : AppCompatActivity() {
         with(deviceCommandViewModel) {
             status.observe(this@DeviceSSHActivity, Observer { status -> updateButtonStatus(status) })
             output.observe(this@DeviceSSHActivity, Observer { output -> updateOutput(output) })
+            error.observe(this@DeviceSSHActivity, Observer { message ->
+                Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+            })
             connect(getDeviceAddress())
         }
     }
