@@ -42,8 +42,10 @@ class Browser(val outputParser: OutputParser) {
         }
     }
 
+    fun getPathJoined() = path.joinToString("")
+
     private fun execute() {
-        val pathParts = path.joinToString("")
+        val pathParts = getPathJoined()
         val command = "ls -l $pathParts"
         commandInvoker?.invoke(command)
     }

@@ -77,7 +77,7 @@ class DeviceBrowserActivity : AppCompatActivity() {
     }
 
     private fun openFile(item: BrowserItem) {
-        val path = "${browser.getPath()}${item.name}"
+        val path = "${browser.getPathJoined()}${item.name}"
         deviceCommandViewModel.readFile(path)
     }
 
