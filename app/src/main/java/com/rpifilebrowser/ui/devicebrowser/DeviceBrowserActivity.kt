@@ -32,6 +32,9 @@ class DeviceBrowserActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     internal lateinit var deviceCommandViewModel: DeviceCommandViewModel
 
+    private var openedItem: BrowserItem? = null
+    private var downloadAction = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_browser)
@@ -41,7 +44,7 @@ class DeviceBrowserActivity : AppCompatActivity() {
         with(deviceCommandViewModel) {
             status.observe(this@DeviceBrowserActivity, Observer { status -> handleStatus(status) })
             output.observe(this@DeviceBrowserActivity, Observer { output -> browser.parseResult(output) })
-            fileOutput.observe(this@DeviceBrowserActivity, Observer { fileOutput -> handleFile(fileOutput) })
+            fileOutput.observe(this@DeviceBrowserActivity, Observer { fileOutput -> handleFileContents(fileOutput) })
             progress.observe(this@DeviceBrowserActivity, Observer { handleProgress(it.first, it.second) })
             error.observe(this@DeviceBrowserActivity, Observer { message ->
                 Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
@@ -77,8 +80,20 @@ class DeviceBrowserActivity : AppCompatActivity() {
     }
 
     private fun openFile(item: BrowserItem) {
-        val path = "${browser.getPathJoined()}${item.name}"
-        deviceCommandViewModel.readFile(path)
+        openedItem = item
+        AlertDialog.Builder(this)
+            .setTitle(R.string.app_name)
+            .setMessage(openedItem?.name)
+            .setNeutralButton(R.string.file_delete, { v, i -> deleteFile(item) })
+            .setPositiveButton(R.string.file_open, { v, i ->
+                downloadAction = false
+                getFile(item)
+            })
+            .setNegativeButton(R.string.file_download, { v, i ->
+                downloadAction = true
+                getFile(item)
+            })
+            .show()
     }
 
     private fun handleProgress(progress: Int, max: Int) {
@@ -86,8 +101,29 @@ class DeviceBrowserActivity : AppCompatActivity() {
         progress_circular.progress = progress
     }
 
-    private fun handleFile(fileContents: String) {
-        // TODO: ask what to do with file
+    private fun handleFileContents(fileContents: String) {
+        hideProgress()
+        when(downloadAction) {
+            true -> {
+                // TODO
+            }
+            else -> openFilePreview(fileContents)
+        }
+    }
+
+    private fun openFilePreview(fileContents: String) {
+        val dialog = FileContentsDialog().apply { contents = fileContents }
+        val ft = supportFragmentManager.beginTransaction()
+        dialog.show(ft, FileContentsDialog.TAG)
+    }
+
+    private fun getFile(item: BrowserItem) {
+        val path = "${browser.getPathJoined()}${item.name}"
+        deviceCommandViewModel.readFile(path)
+    }
+
+    private fun deleteFile(item: BrowserItem) {
+        // TODO
     }
 
     private fun handleStatus(status: Int) {
