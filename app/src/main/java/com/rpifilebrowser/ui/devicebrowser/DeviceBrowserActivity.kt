@@ -1,6 +1,7 @@
 package com.rpifilebrowser.ui.devicebrowser
 
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -17,6 +18,9 @@ import com.rpifilebrowser.ui.deviceselect.DeviceSelectActivity.Companion.DEVICE_
 import com.rpifilebrowser.viewmodels.DeviceCommandViewModel
 import kotlinx.android.synthetic.main.activity_device_browser.*
 import kotlinx.coroutines.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
 import javax.inject.Inject
 
 class DeviceBrowserActivity : AppCompatActivity() {
@@ -103,11 +107,23 @@ class DeviceBrowserActivity : AppCompatActivity() {
 
     private fun handleFileContents(fileContents: String) {
         hideProgress()
-        when(downloadAction) {
-            true -> {
-                // TODO
-            }
+        when (downloadAction) {
+            true -> saveFile(fileContents)
             else -> openFilePreview(fileContents)
+        }
+    }
+
+    private fun saveFile(fileContents: String) {
+        openedItem?.let { openedItem ->
+            val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val file = File(dir, openedItem.name)
+            FileOutputStream(file).use { fos ->
+                OutputStreamWriter(fos).use { osw ->
+                    osw.write(fileContents)
+                }
+            }
+            Toast.makeText(applicationContext, getString(R.string.file_saved_to, file.absolutePath), Toast.LENGTH_LONG)
+                .show()
         }
     }
 
